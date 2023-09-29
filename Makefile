@@ -20,5 +20,5 @@ service-account:
 gcp-secret:
 		kubeseal --fetch-cert --controller-name=sealed-secrets-controller --controller-namespace=flux-system > k8s/flux-system/pub-sealed-secrets.pem
 		kubectl create secret generic gcp-secret -n crossplane-system --from-file=creds=./gcp-credentials.json -o yaml --dry-run > k8s/crossplane-system/gcp-credentials.yaml
-		kubeseal --format yaml --cert k8s/flux-system/pub-sealed-secrets.pem < k8s/crossplane-system/gcp-credentials.yaml >> k8s/crossplane-system/gcp-credentials-enc.yaml
+		kubeseal --format yaml --cert k8s/flux-system/pub-sealed-secrets.pem < k8s/crossplane-system/gcp-credentials.yaml > k8s/crossplane-system/gcp-credentials-enc.yaml
 		rm -f k8s/crossplane-system/gcp-credentials.yaml
