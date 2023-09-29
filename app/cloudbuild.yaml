@@ -9,8 +9,10 @@ steps:
 
   - id: "build image"
     name: "gcr.io/cloud-builders/docker"
+    dir: app
     args: ["build", "-t", "$(cat /workspace/imagename)", "."]
 
   - id: "push image"
     name: "gcr.io/cloud-builders/docker"
+    dir: app
     args: ["push", "-t", "$(cat /workspace/imagename)", "."]
