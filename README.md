@@ -72,3 +72,10 @@ kubectl apply -f k8s/gcp-resources/sync.yaml
 ```
 
 Note that for cloud build trigger to work you'd still have to manually connect the repository from the gcp console.
+
+# TODO
+
+- Add django app resources
+- Provision service account / role binding
+- Combine gcp-resources using crossplane compositions
+- Maybe self-serve platform with [backstage](https://github.com/backstage/backstage) / [port](https://github.com/port-labs)
