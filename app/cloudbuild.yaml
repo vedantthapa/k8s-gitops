@@ -9,6 +9,7 @@ steps:
 
   - id: "build image"
     name: "gcr.io/cloud-builders/docker"
+    entrypoint: "bash"
     dir: app
     args: 
       - "-c"
@@ -19,6 +20,7 @@ steps:
 
   - id: "push image"
     name: "gcr.io/cloud-builders/docker"
+    entrypoint: "bash"
     dir: app
     args: 
       - "-c"
