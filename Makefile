@@ -15,3 +15,10 @@ service-account:
 		gcloud projects add-iam-policy-binding "$(project)" --member "serviceAccount:crossplane-provider@$(project).iam.gserviceaccount.com" --role roles/editor
 		gcloud iam service-accounts keys create gcp-credentials.json \
     --iam-account=crossplane-provider@$(project).iam.gserviceaccount.com
+
+.PHONY: gcp-secret
+gcp-secret:
+		kubeseal --fetch-cert --controller-name=sealed-secrets-controller --controller-namespace=flux-system > k8s/flux-system/pub-sealed-secrets.pem
+		kubectl create secret generic gcp-secret -n crossplane-system --from-file=creds=./gcp-credentials.json -o yaml --dry-run > k8s/crossplane-system/gcp-credentials.yaml
+		kubeseal --format yaml --cert k8s/flux-system/pub-sealed-secrets.pem < k8s/crossplane-system/gcp-credentials.yaml >> k8s/crossplane-system/gcp-credentials-enc.yaml
+		rm -f k8s/crossplane-system/gcp-credentials.yaml
