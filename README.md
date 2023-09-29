@@ -70,3 +70,5 @@ To create and sync all resources with flux, deploy the `sync.yaml` file:
 ```
 kubectl apply -f k8s/gcp-resources/sync.yaml
 ```
+
+Note that for cloud build trigger to work you'd still have to manually connect the repository from the gcp console.
