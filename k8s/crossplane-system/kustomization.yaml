@@ -4,5 +4,5 @@ resources:
   - ns.yaml
   - helm.yaml
   - gcp-credentials-enc.yaml
-  - provider.yaml
-  - providerconfig.yaml
+  # - provider.yaml
+  # - providerconfig.yaml
