@@ -14,7 +14,7 @@ steps:
       - "-c"
       - |
         image=$(cat /workspace/imagename)
-        docker build $image .
+        docker build -t $image .
 
   - id: "push image"
     name: "gcr.io/cloud-builders/docker"
@@ -23,4 +23,4 @@ steps:
       - "-c"
       - |
         image=$(cat /workspace/imagename)
-        docker push $image .
+        docker push $image
