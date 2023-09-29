@@ -1,0 +1,12 @@
+apiVersion: artifact.gcp.upbound.io/v1beta1
+kind: RegistryRepository
+metadata:
+  name: app
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    description: Repository to store docker images for django app
+    format: DOCKER
+    location: northamerica-northeast1
+  providerConfigRef:
+    name: default

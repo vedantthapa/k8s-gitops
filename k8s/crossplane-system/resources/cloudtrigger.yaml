@@ -1,0 +1,21 @@
+apiVersion: cloudbuild.gcp.upbound.io/v1beta1
+kind: Trigger
+metadata:
+  name: app-main-branch
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    filename: app/cloudbuild.yaml
+    name: main-trigger
+    description: Cloud build trigger for main branch for the repo
+    location: northamerica-northeast1
+    ignoredFiles: 
+      - k8s/**
+    includeBuildLogs: INCLUDE_BUILD_LOGS_WITH_STATUS
+    github:
+      - name: k8s-gitops
+        owner: vedantthapa
+        push:
+          - branch: main
+  providerConfigRef:
+    name: default

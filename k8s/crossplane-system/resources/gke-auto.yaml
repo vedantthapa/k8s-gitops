@@ -1,0 +1,11 @@
+apiVersion: container.gcp.upbound.io/v1beta1
+kind: Cluster
+metadata:
+  name: app-gke 
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    enableAutopilot: true
+    location: northamerica-northeast1
+  providerConfigRef:
+    name: default
