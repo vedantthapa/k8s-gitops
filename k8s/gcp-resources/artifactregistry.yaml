@@ -9,4 +9,4 @@ spec:
     format: DOCKER
     location: northamerica-northeast1
   providerConfigRef:
-    name: default
+    name: provider-gcp
