@@ -3,16 +3,24 @@ steps:
     name: "gcr.io/cloud-builders/docker"
     entrypoint: "bash"
     args:
-      - '-c'
+      - "-c"
       - |
         echo "northamerica-northeast1-docker.pkg.dev/${PROJECT_ID}/app/app:$BRANCH_NAME-$SHORT_SHA-$(date +%s)" > /workspace/imagename
 
   - id: "build image"
     name: "gcr.io/cloud-builders/docker"
     dir: app
-    args: ["build", "-t", "$(cat /workspace/imagename)", "."]
+    args: 
+      - "-c"
+      - |
+        image=$(cat /workspace/imagename)
+        docker build $image .
 
   - id: "push image"
     name: "gcr.io/cloud-builders/docker"
     dir: app
-    args: ["push", "-t", "$(cat /workspace/imagename)", "."]
+    args: 
+      - "-c"
+      - |
+        image=$(cat /workspace/imagename)
+        docker push $image .
