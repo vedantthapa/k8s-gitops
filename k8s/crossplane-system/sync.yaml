@@ -28,6 +28,10 @@ spec:
     name: flux-system
   dependsOn:
     - name: crossplane-system-crds
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: CustomResourceDefinition
+      name: providerconfigs.gcp.upbound.io
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
