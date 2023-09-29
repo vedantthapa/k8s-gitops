@@ -1,4 +1,4 @@
-FROM python:3.11-alpine3.17 
+FROM cgr.dev/chainguard/python:latest-dev
 EXPOSE 8000
 WORKDIR /app 
 COPY requirements.txt /app
