@@ -12,4 +12,4 @@ k3d-delete:
 .PHONY: service-account
 service-account:
 		gcloud iam service-accounts create crossplane-provider --display-name "crossplane-provider"
-                gcloud projects add-iam-policy-binding "$(project)" --member "serviceAccount:crossplane-provider@$(project).iam.gserviceaccount.com" --role roles/editor
+		gcloud projects add-iam-policy-binding "$(project)" --member "serviceAccount:crossplane-provider@$(project).iam.gserviceaccount.com" --role roles/editor
