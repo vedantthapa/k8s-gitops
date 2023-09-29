@@ -17,6 +17,21 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: crossplane-system-providers
+  namespace: flux-system
+spec:
+  interval: 2m0s
+  path: ./k8s/crossplane-system/provider
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  dependsOn:
+    - name: crossplane-system-crds
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: crossplane-system
   namespace: flux-system
 spec:
@@ -27,4 +42,4 @@ spec:
     kind: GitRepository
     name: flux-system
   dependsOn:
-    - name: crossplane-system-crds
+    - name: crossplane-system-providers
