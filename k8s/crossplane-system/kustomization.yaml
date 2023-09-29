@@ -6,4 +6,3 @@ resources:
   - gcp-credentials-enc.yaml
   - provider.yaml
   - providerconfig.yaml
-  - sync.yaml
