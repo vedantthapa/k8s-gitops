@@ -4,3 +4,4 @@ resources:
   - gke-auto.yaml
   - cloudtrigger.yaml
   - artifactregistry.yaml
+  - gcr-service-account.yaml
