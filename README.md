@@ -92,5 +92,7 @@ kubectl get ks -n flux-system
 
 - Add django app resources
 - Provision service account / role binding
+- Add istio
+- Update istio / flux via gh-actions
 - Combine gcp-resources using crossplane compositions
-- Maybe self-serve platform with [backstage](https://github.com/backstage/backstage) / [port](https://github.com/port-labs)
+- Self-serve platform with [backstage](https://github.com/backstage/backstage) / [port](https://github.com/port-labs)?
