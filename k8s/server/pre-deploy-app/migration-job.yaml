@@ -11,7 +11,7 @@ spec:
       restartPolicy: OnFailure
       containers:
         - name: server-migrations
-          image: northamerica-northeast1-docker.pkg.dev/phx-01h57q8t23amkhpscfjenrp9y2/app/app:main-3f89f1e-1696453078 # {"$imagepolicy": "flux-system:server"}
+          image: northamerica-northeast1-docker.pkg.dev/phx-01h57q8t23amkhpscfjenrp9y2/app/app:main-bb35198-1696454422 # {"$imagepolicy": "flux-system:server"}
           command: ["/bin/sh"]
           args:
             - "-c"
