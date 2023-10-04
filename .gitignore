@@ -2,6 +2,9 @@
 gcp-credentials.json
 gcr-credentials.json
 
+# OSX
+.DS_Store
+
 # vi
 *.swp
 *.swo
