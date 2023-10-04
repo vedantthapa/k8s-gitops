@@ -17,6 +17,9 @@ service-account:
 		gcloud projects add-iam-policy-binding "$(project)" \
 				--member "serviceAccount:crossplane-provider@$(project).iam.gserviceaccount.com" \
 				--role roles/editor
+		gcloud projects add-iam-policy-binding "$(project)" \
+				--member "serviceAccount:crossplane-provider@$(project).iam.gserviceaccount.com" \
+				--role roles/resourcemanager.projectIamAdmin
 		gcloud iam service-accounts keys create gcp-credentials.json \
 				--iam-account=crossplane-provider@$(project).iam.gserviceaccount.com
 

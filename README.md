@@ -6,7 +6,9 @@ Demo for provisioning infrastructure using [crossplane](https://docs.crossplane.
 
 All k8s esources are arranged under the `k8s/` directory. Every sub-directory name corresponds to the name of the k8s namespace, i.e, resources in the same namespace are stored together.
 
-Every sub-directory is expected to have a `sync.yaml` and a `kustomization.yaml` to enable syncing up with flux. Resources in the `sync.yaml` are always provisioned in the flux-system namespace.
+Every sub-directory is expected to have a `sync.yaml` and a `kustomization.yaml` (from `kustomize.config.k8s.io/v1beta1` and not `kustomize.toolkit.fluxcd.io/v1`) to enable syncing up with flux. Resources in the `sync.yaml` are always provisioned in the flux-system namespace. The `sync.yaml` can be considered as an entrypoint to your namespace / micro-service. It contains sync reconciliation mechanisms pertianing to any git repo / kustomize / image repo / image automation etc.
+
+Most of the kustomize (`kustomize.toolkit.fluxcd.io/v1`) resources have a `depends_on` key that enables us to specify dependencies between kustomizations. This is particulary useful when deploying applications from scratch. For instance, before deploying provider configurations in the `crossplane-system` ns, it's crds must be available. Another instance of this would be applying django migrations before the application startup (in this demo), read more [here](https://fluxcd.io/flux/use-cases/running-jobs/).
 
 # Setup
 
@@ -22,7 +24,7 @@ make service-account
 
 This command stores the service account keys in a `gcp-credentials.json` which is gitignored by default.
 
-> For demo purposes, the service account has an **editor** role. This should not be replicated in production.
+> For demo purposes, the service account has an **Editor** and **Project IAM Admin** role. This should not be replicated in production.
 
 We'll create a local cluster using [K3d](https://k3d.io/v5.4.1/) to act as the management plane for provisioning resources on the cloud. Feel free to skip the following command if you'd like to use gke-autopilot.
 
@@ -71,7 +73,20 @@ To create and sync all resources with flux, deploy the `sync.yaml` file:
 kubectl apply -f k8s/gcp-resources/sync.yaml
 ```
 
-Note that for cloud build trigger to work you'd still have to manually connect the repository from the gcp console.
+> For cloud build trigger to work you'd still have to manually connect the repository from the gcp console.
+
+For the purpose of this demo there's a django app and postgres database which can be deployed with:
+
+```
+kubectl apply -f k8s/cnpg-system/sync.yaml
+kubectl apply -f k8s/server/sync.yaml
+```
+
+As mentioned earlier, reconciliation can be monitored with
+
+```
+kubectl get ks -n flux-system
+```
 
 # TODO
 
