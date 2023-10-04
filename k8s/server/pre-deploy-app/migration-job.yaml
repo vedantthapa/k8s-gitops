@@ -6,6 +6,8 @@ metadata:
 spec:
   template:
     spec:
+      imagePullSecrets:
+        - name: gcr-credentials
       restartPolicy: OnFailure
       containers:
         - name: server-migrations
