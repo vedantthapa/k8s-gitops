@@ -29,7 +29,8 @@ gcp-secret:
 				--controller-name=sealed-secrets-controller \
 				--controller-namespace=flux-system > k8s/flux-system/pub-sealed-secrets.pem
 		kubectl create secret generic gcp-secret \
-				--namespace crossplane-system --from-file ./gcp-credentials.json -o yaml \
+				--namespace crossplane-system \
+				--from-file=creds=./gcp-credentials.json -o yaml \
 				--dry-run > k8s/crossplane-system/gcp-credentials.yaml
 		kubeseal --format yaml \
 				--cert k8s/flux-system/pub-sealed-secrets.pem < k8s/crossplane-system/gcp-credentials.yaml > k8s/crossplane-system/gcp-credentials-enc.yaml
