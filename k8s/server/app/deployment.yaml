@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: server
+  name: server
+  namespace: server
+spec:
+  selector:
+    matchLabels:
+      app: server
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      imagePullSecrets:
+        - name: gcr-credentials
+      containers:
+        - name: server
+          image: northamerica-northeast1-docker.pkg.dev/phx-01h57q8t23amkhpscfjenrp9y2/app/app:main-ccb4722-1696431676 # {"$imagepolicy": "flux-system:server"}
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: polls-config
+          env:
+            - name: DATABASE_HOST
+              value: postgres-cluster-rw
+            - name: DATABASE_PORT
+              value: "5432"
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-cluster-app
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-cluster-app
+                  key: password
