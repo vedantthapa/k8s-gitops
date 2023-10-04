@@ -10,7 +10,7 @@ spec:
     kind: GitRepository
     name: flux-system
   dependsOn:
-    - name: gcp-resources
+    - name: cnpg-system
   prune: true
   wait: true
   force: true
