@@ -13,4 +13,53 @@ spec:
   dependsOn:
     - name: gcp-resources
 ---
-
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageRepository
+metadata:
+  name: server
+  namespace: flux-system
+spec:
+  image: northamerica-northeast1-docker.pkg.dev/phx-01h57q8t23amkhpscfjenrp9y2/app/app
+  interval: 1m0s
+  secretRef:
+    name: gcr-credentials
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImagePolicy
+metadata:
+  name: server
+  namespace: flux-system
+spec:
+  filterTags:
+    extract: $ts
+    pattern: ^main-[a-fA-F0-9]+-(?P<ts>.*)
+  imageRepositoryRef:
+    name: server
+  policy:
+    numerical:
+      order: asc
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: server
+  namespace: flux-system
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  interval: 5m
+  update:
+    strategy: Setters
+    path: .
+  git:
+    checkout:
+      ref:
+        branch: "main"
+    commit:
+      author:
+        name: fluxbot
+        email: fluxcd@users.noreply.github.com
+      messageTemplate: "[ci skip] {{range .Updated.Images}}{{println .}}{{end}}"
+    push:
+      branch: "main"
