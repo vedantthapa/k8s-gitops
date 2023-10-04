@@ -1,5 +1,6 @@
 # gcp
 gcp-credentials.json
+gcr-credentials.json
 
 # vi
 *.swp
