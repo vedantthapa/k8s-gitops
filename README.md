@@ -82,6 +82,16 @@ kubectl apply -f k8s/cnpg-system/sync.yaml
 kubectl apply -f k8s/server/sync.yaml
 ```
 
+For a local deployment on `k3d`, since a workload identity isn't available you'd have to create a secret to allow pods to pull images from the google cloud artifact registry. Run the following command to configure this:
+
+```
+make registry-secret
+```
+
+This command adds and downloads the service account keys for `gcr-credentials-sync@$(project).iam.gserviceaccount.com` and creates a secret called `gcr-credentials` in the `flux-system` and `server` namespaces.
+
+A secret in the `flux-system` namespace is required for the image automation to work.
+
 As mentioned earlier, reconciliation can be monitored with
 
 ```
