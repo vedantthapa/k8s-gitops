@@ -19,6 +19,6 @@ spec:
         - name: gcr-credentials
       containers:
         - name: server
-          image: northamerica-northeast1-docker.pkg.dev/phx-01h57q8t23amkhpscfjenrp9y2/app/app:main-8bb3021-1696349145 # {"$imagepolicy": "flux-system:server"}
+          image: northamerica-northeast1-docker.pkg.dev/phx-01h57q8t23amkhpscfjenrp9y2/app/app:main-c7aa33f-1696378422 # {"$imagepolicy": "flux-system:server"}
           ports:
             - containerPort: 8000
