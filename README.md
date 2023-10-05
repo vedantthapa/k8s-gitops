@@ -1,5 +1,7 @@
 # k8s-gitops
 
+[![update-flux](https://github.com/vedantthapa/k8s-gitops/workflows/update-flux/badge.svg)](https://github.com/vedantthapa/k8s-gitops/actions)
+
 Demo for provisioning infrastructure using [crossplane](https://docs.crossplane.io/) + [flux](https://fluxcd.io/flux/)
 
 # Resource arrangement
