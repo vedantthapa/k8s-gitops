@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 2m0s
-  path: ./k8s/crossplane-system/crds
+  path: ./k8s/crossplane-system/helm
   prune: true
   sourceRef:
     kind: GitRepository
