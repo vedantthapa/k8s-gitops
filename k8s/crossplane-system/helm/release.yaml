@@ -19,3 +19,9 @@ spec:
   targetNamespace: crossplane-system
   upgrade:
     crds: CreateReplace
+  values:
+    args:
+      - --enable-environment-configs
+    provider:
+      packages:
+        - xpkg.upbound.io/upbound/provider-gcp:v0.37.0
