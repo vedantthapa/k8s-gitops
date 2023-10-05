@@ -37,9 +37,13 @@ gcp-secret:
 		rm -f k8s/crossplane-system/gcp-credentials.yaml
 
 # create secrets in flux-system and server namespace for image reconciliation and image pull respectively
-.PHONY: registry-secret
-registry-secret:
+.PHONY: account_keys
+account_keys:
 		gcloud iam service-accounts keys create gcr-credentials.json --iam-account gcr-credentials-sync@$(project).iam.gserviceaccount.com
+
+
+.PHONY: registry-secret
+registry-secret: account_keys
 		kubectl create secret docker-registry gcr-credentials \
 					--namespace=server \
                     --dry-run=client \
