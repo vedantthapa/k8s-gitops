@@ -102,8 +102,6 @@ kubectl get ks -n flux-system
 
 # TODO
 
-- Add django app resources
-- Provision service account / role binding
 - Add istio
 - Update istio / flux via gh-actions
 - Combine gcp-resources using crossplane compositions
