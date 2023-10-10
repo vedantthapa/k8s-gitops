@@ -1,0 +1,7 @@
+apiVersion: vedant.org/v1alpha1
+kind: XDns
+metadata:
+  name: dns
+spec:
+  name: vedant
+  dnsName: vedant.phac-aspc.alpha.canada.ca.

@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 2m0s
-  path: ./k8s/gcp-resources/
+  path: ./k8s/gcp-resources/mr
   prune: true
   sourceRef:
     kind: GitRepository
