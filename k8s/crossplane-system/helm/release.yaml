@@ -25,3 +25,4 @@ spec:
     provider:
       packages:
         - xpkg.upbound.io/upbound/provider-gcp:v0.37.0
+        - xpkg.upbound.io/upbound/provider-terraform:v0.10.0
