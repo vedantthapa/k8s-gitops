@@ -1,0 +1,165 @@
+apiVersion: tf.upbound.io/v1beta1
+kind: Workspace
+metadata:
+  name: hpc
+spec:
+  forProvider:
+    source: Inline
+    module: |
+      module "network1" {
+        source          = "git::https://github.com/GoogleCloudPlatform/hpc-toolkit.git//modules/network/vpc"
+        deployment_name = var.deployment_name
+        project_id      = var.project_id
+        region          = var.region
+      }
+
+      module "homefs" {
+        source          = "git::https://github.com/GoogleCloudPlatform/hpc-toolkit.git//modules/file-system/filestore"
+        deployment_name = var.deployment_name
+        labels = merge(var.labels, {
+          ghpc_role = "file-system"
+        })
+        local_mount = "/home"
+        network_id  = module.network1.network_id
+        project_id  = var.project_id
+        region      = var.region
+        zone        = var.zone
+      }
+
+      module "debug_node_group" {
+        source = "git::https://github.com/GoogleCloudPlatform/hpc-toolkit.git//community/modules/compute/schedmd-slurm-gcp-v5-node-group"
+        labels = merge(var.labels, {
+          ghpc_role = "compute"
+        })
+        machine_type           = "n2-standard-2"
+        node_count_dynamic_max = 4
+        project_id             = var.project_id
+      }
+
+      module "debug_partition" {
+        source               = "git::https://github.com/GoogleCloudPlatform/hpc-toolkit.git//community/modules/compute/schedmd-slurm-gcp-v5-partition"
+        deployment_name      = var.deployment_name
+        enable_placement     = false
+        exclusive            = false
+        is_default           = true
+        network_storage      = flatten([module.homefs.network_storage])
+        node_groups          = flatten([module.debug_node_group.node_groups])
+        partition_name       = "debug"
+        project_id           = var.project_id
+        region               = var.region
+        subnetwork_self_link = module.network1.subnetwork_self_link
+        zone                 = var.zone
+      }
+
+      module "compute_node_group" {
+        source = "git::https://github.com/GoogleCloudPlatform/hpc-toolkit.git//community/modules/compute/schedmd-slurm-gcp-v5-node-group"
+        labels = merge(var.labels, {
+          ghpc_role = "compute"
+        })
+        node_count_dynamic_max = 20
+        project_id             = var.project_id
+      }
+
+      module "compute_partition" {
+        source               = "git::https://github.com/GoogleCloudPlatform/hpc-toolkit.git//community/modules/compute/schedmd-slurm-gcp-v5-partition"
+        deployment_name      = var.deployment_name
+        network_storage      = flatten([module.homefs.network_storage])
+        node_groups          = flatten([module.compute_node_group.node_groups])
+        partition_name       = "compute"
+        project_id           = var.project_id
+        region               = var.region
+        subnetwork_self_link = module.network1.subnetwork_self_link
+        zone                 = var.zone
+      }
+
+      module "h3_node_group" {
+        source    = "git::https://github.com/GoogleCloudPlatform/hpc-toolkit.git//community/modules/compute/schedmd-slurm-gcp-v5-node-group"
+        disk_type = "pd-balanced"
+        labels = merge(var.labels, {
+          ghpc_role = "compute"
+        })
+        machine_type           = "h3-standard-88"
+        node_count_dynamic_max = 20
+        project_id             = var.project_id
+      }
+
+      module "h3_partition" {
+        source               = "git::https://github.com/GoogleCloudPlatform/hpc-toolkit.git//community/modules/compute/schedmd-slurm-gcp-v5-partition"
+        deployment_name      = var.deployment_name
+        network_storage      = flatten([module.homefs.network_storage])
+        node_groups          = flatten([module.h3_node_group.node_groups])
+        partition_name       = "h3"
+        project_id           = var.project_id
+        region               = var.region
+        subnetwork_self_link = module.network1.subnetwork_self_link
+        zone                 = var.zone
+      }
+
+      module "slurm_controller" {
+        source                        = "git::https://github.com/GoogleCloudPlatform/hpc-toolkit.git//community/modules/scheduler/schedmd-slurm-gcp-v5-controller"
+        deployment_name               = var.deployment_name
+        disable_controller_public_ips = false
+        labels = merge(var.labels, {
+          ghpc_role = "scheduler"
+        })
+        network_self_link    = module.network1.network_self_link
+        network_storage      = flatten([module.homefs.network_storage])
+        partition            = flatten([module.h3_partition.partition, flatten([module.compute_partition.partition, flatten([module.debug_partition.partition])])])
+        project_id           = var.project_id
+        region               = var.region
+        subnetwork_self_link = module.network1.subnetwork_self_link
+        zone                 = var.zone
+      }
+
+      module "slurm_login" {
+        source                   = "git::https://github.com/GoogleCloudPlatform/hpc-toolkit.git//community/modules/scheduler/schedmd-slurm-gcp-v5-login"
+        controller_instance_id   = module.slurm_controller.controller_instance_id
+        deployment_name          = var.deployment_name
+        disable_login_public_ips = false
+        labels = merge(var.labels, {
+          ghpc_role = "scheduler"
+        })
+        machine_type         = "n2-standard-4"
+        network_self_link    = module.network1.network_self_link
+        project_id           = var.project_id
+        pubsub_topic         = module.slurm_controller.pubsub_topic
+        region               = var.region
+        subnetwork_self_link = module.network1.subnetwork_self_link
+        zone                 = var.zone
+      }
+
+      variable "deployment_name" {
+        description = "Toolkit deployment variable: deployment_name"
+        type        = string
+      }
+
+      variable "labels" {
+        description = "Toolkit deployment variable: labels"
+        type        = any
+      }
+
+      variable "project_id" {
+        description = "Toolkit deployment variable: project_id"
+        type        = string
+      }
+
+      variable "region" {
+        description = "Toolkit deployment variable: region"
+        type        = string
+      }
+
+      variable "zone" {
+        description = "Toolkit deployment variable: zone"
+        type        = string
+      }
+    vars:
+      - key: deployment_name
+        value: hpc-small
+      - key: labels
+        value: '{ managed_by= "crossplane" }'
+      - key: project_id
+        value: phx-01h57q8t23amkhpscfjenrp9y2
+      - key: region
+        value: northamerica-northeast1
+      - key: zone
+        value: northamerica-northeast1-a
