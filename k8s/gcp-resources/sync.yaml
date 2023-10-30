@@ -1,7 +1,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: gcp-resources
+  name: gcp-resources-mr
   namespace: flux-system
 spec:
   interval: 2m0s
@@ -12,3 +12,48 @@ spec:
     name: flux-system
   dependsOn:
     - name: crossplane-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: gcp-resources-xrd
+  namespace: flux-system
+spec:
+  interval: 2m0s
+  path: ./k8s/gcp-resources/xrd
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  dependsOn:
+    - name: crossplane-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: gcp-resources-compositions
+  namespace: flux-system
+spec:
+  interval: 2m0s
+  path: ./k8s/gcp-resources/compositions
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  dependsOn:
+    - name: gcp-resources-xrd
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: gcp-resources-xr
+  namespace: flux-system
+spec:
+  interval: 2m0s
+  path: ./k8s/gcp-resources/xr
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  dependsOn:
+    - name: gcp-resources-compositions
