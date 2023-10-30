@@ -1,0 +1,7 @@
+apiVersion: vedant.org/v1alpha1
+kind: XDns
+metadata:
+  name: dns
+spec:
+  name: "test"
+  dnsName: "test.phac.alpha.canada.ca."
