@@ -16,7 +16,7 @@ steps:
       - |
         image=$(cat /workspace/imagename)
         echo $image
-        docker build -t $image .
+        docker build -t $image . --cache-from $image
 
   - id: "scan"
     name: ghcr.io/aquasecurity/trivy
@@ -27,7 +27,8 @@ steps:
       - |
         image=$(cat /workspace/imagename)
         echo $image
-        trivy image $image
+        trivy image --no-progress --exit-code 0 $image
+        trivy image --no-progress --exit-code 1 --severity CRITICAL $image
 
   - id: "push image"
     name: "gcr.io/cloud-builders/docker"
