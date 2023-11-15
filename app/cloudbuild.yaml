@@ -20,13 +20,8 @@ steps:
 
   - id: "scan"
     name: ghcr.io/aquasecurity/trivy
-    args:
-      - "-c"
-      - |
-        image=$(cat /workspace/imagename)
-        echo $image
-        trivy image $image
-         
+    dir: app
+    args: ["image", "$(cat /workspace/imagename)"]
 
   - id: "push image"
     name: "gcr.io/cloud-builders/docker"
