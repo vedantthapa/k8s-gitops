@@ -24,6 +24,8 @@ steps:
       - "-c"
       - |
         image=$(cat /workspace/imagename)
+        echo $image
+        trivy image $image
          
 
   - id: "push image"
