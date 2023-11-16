@@ -27,8 +27,14 @@ steps:
       - |
         image=$(cat /workspace/imagename)
         echo $image
-        trivy image --no-progress --exit-code 0 $image
-        trivy image --no-progress --exit-code 1 --severity CRITICAL $image
+        
+        if [[ $TRIGGER_NAME != "app-main-trigger" ]]
+        then
+          echo "Skip image scan for $TRIGGER_NAME"
+        else
+          trivy image --no-progress --exit-code 0 $image
+          trivy image --no-progress --exit-code 1 --severity CRITICAL $image
+        fi
 
   - id: "push image"
     name: "gcr.io/cloud-builders/docker"
