@@ -39,4 +39,3 @@ steps:
       - |
         image=$(cat /workspace/imagename)
         docker push $image
-
