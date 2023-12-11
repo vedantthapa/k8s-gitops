@@ -7,9 +7,12 @@ spec:
   interval: 2m0s
   path: ./k8s/cert-manager/crds
   prune: true
+  wait: true
   sourceRef:
     kind: GitRepository
     name: flux-system
+  dependsOn:
+    - name: istio-system
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -18,9 +21,12 @@ metadata:
   namespace: flux-system
 spec:
   interval: 2m0s
-  path: ./k8s/cert-manager/
+  path: ./k8s/cert-manager
   prune: true
+  wait: true
   sourceRef:
     kind: GitRepository
     name: flux-system
+  dependsOn:
+    - name: cert-manager-crds
 
