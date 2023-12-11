@@ -11,4 +11,4 @@ spec:
     kind: GitRepository
     name: flux-system
   dependsOn:
-    - name: gcp-resources
+    - name: flux-system 
